@@ -1,7 +1,7 @@
 [project]
-name = "rakthalink"
+name = "hemokerala"
 version = "0.1.0"
-description = "RakthaLink Kerala - Day 1 backend"
+description = "HemoKerala - Day 1 backend"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.111.0",
@@ -27,6 +27,9 @@ src = ["backend"]
 select = ["E", "F", "I", "B", "C4", "UP"]
 ignore = ["B008"]
 unfixable = ["F401", "F841"]
+
+[tool.ruff.lint.per-file-ignores]
+"backend/alembic/versions/*.py" = ["F401", "F841", "I", "UP"]
 
 [tool.ruff.format]
 docstring-code-format = true

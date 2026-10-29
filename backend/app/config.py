@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 class Settings(BaseSettings):
-    APP_NAME: str = "RakthaLink Kerala"
+    APP_NAME: str = "HemoKerala"
     APP_ENV: str = "development"
     DEBUG: bool = True
 
@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "change_me_in_production"
-    POSTGRES_DB: str = "rakthalink"
+    POSTGRES_DB: str = "hemo_kerala"
 
     DATABASE_URL: str | None = None
 

@@ -10,4 +10,4 @@ def setup_logging() -> None:
     )
 
 
-logger = logging.getLogger("rakthalink")
+logger = logging.getLogger("hemokerala")
