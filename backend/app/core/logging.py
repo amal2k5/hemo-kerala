@@ -10,4 +10,8 @@ def setup_logging() -> None:
     )
 
 
-logger = logging.getLogger("hemokerala")
+def get_logger(name: str) -> logging.Logger:
+    return logging.getLogger(f"hemokerala.{name}")
+
+
+logger = get_logger("app")

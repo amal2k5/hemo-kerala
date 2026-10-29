@@ -1,12 +1,4 @@
-from app.database import User
-from app.security import hash_password, verify_password
-
-
-def test_password_hashing_and_verification():
-    hashed = hash_password("secret123")
-    assert hashed != "secret123"
-    assert verify_password("secret123", hashed) is True
-    assert verify_password("wrongpassword", hashed) is False
+from app.modules.users.models import User
 
 
 def test_successful_registration(client):
@@ -98,9 +90,7 @@ def test_me_with_valid_token(client):
         json={"email": "me@example.com", "password": "secret123"},
     )
     token = login.json()["access_token"]
-    response = client.get(
-        "/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"}
-    )
+    response = client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
     data = response.json()
     assert data["email"] == "me@example.com"

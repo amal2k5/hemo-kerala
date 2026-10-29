@@ -3,7 +3,7 @@ from datetime import UTC, datetime, timedelta
 from argon2 import PasswordHasher
 from jose import JWTError, jwt
 
-from app.config import settings
+from app.core.config import settings
 
 ph = PasswordHasher()
 
@@ -27,11 +27,11 @@ def create_access_token(subject: str | int, expires_delta: timedelta | None = No
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
-def decode_access_token(token: str) -> str | None:
+def decode_access_token(token: str) -> int | None:
+    """Return the user id from a valid token, or ``None`` when it is invalid."""
     try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
-        )
-        return payload.get("sub")
-    except JWTError:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        subject = payload.get("sub")
+        return int(subject) if subject is not None else None
+    except (JWTError, TypeError, ValueError):
         return None
