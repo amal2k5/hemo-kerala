@@ -1,6 +1,8 @@
 from datetime import datetime
 from enum import StrEnum
 
+from geoalchemy2 import Geography
+from geoalchemy2.elements import WKBElement
 from sqlalchemy import (
     CheckConstraint,
     DateTime,
@@ -137,6 +139,7 @@ class BloodRequest(TimestampMixin, Base):
             name="longitude_range",
         ),
         Index("ix_blood_requests_status_required_by", "status", "required_by"),
+        Index("ix_blood_requests_location", "location", postgresql_using="gist"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -151,6 +154,13 @@ class BloodRequest(TimestampMixin, Base):
     locality: Mapped[str | None] = mapped_column(String(255), nullable=True)
     latitude: Mapped[float | None] = mapped_column(Numeric(9, 6), nullable=True)
     longitude: Mapped[float | None] = mapped_column(Numeric(9, 6), nullable=True)
+
+    # Derived from latitude/longitude at write time; used for indexed spatial
+    # searches. Never exposed through the API.
+    location: Mapped[WKBElement | None] = mapped_column(
+        Geography(geometry_type="POINT", srid=4326, spatial_index=False),
+        nullable=True,
+    )
     required_by: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), index=True, nullable=False
     )

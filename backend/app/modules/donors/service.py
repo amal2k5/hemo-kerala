@@ -6,6 +6,7 @@ from app.core.exceptions import (
     NotFoundError,
     ValidationFailedError,
 )
+from app.db.spatial import point_geography
 from app.modules.donors.models import DonorProfile
 from app.modules.donors.repository import DonorProfileRepository
 from app.modules.donors.schemas import (
@@ -36,6 +37,7 @@ class DonorService:
         self._validate_location(profile_in.district_id, profile_in.local_body_id)
 
         profile = DonorProfile(user_id=user.id, **profile_in.model_dump())
+        profile.location = point_geography(profile_in.latitude, profile_in.longitude)
         self.profiles.add(profile)
         try:
             self.db.commit()
@@ -61,6 +63,8 @@ class DonorService:
 
         for field, value in changes.items():
             setattr(profile, field, value)
+
+        profile.location = point_geography(profile.latitude, profile.longitude)
 
         self.db.commit()
         self.db.refresh(profile)

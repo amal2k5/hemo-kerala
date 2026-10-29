@@ -33,6 +33,14 @@ class Settings(BaseSettings):
 
     CORS_ORIGINS: str = "http://localhost:5173"
 
+    # Candidate matching is deliberately bounded; callers cannot ask for an
+    # unbounded search radius.
+    DONOR_MATCH_DEFAULT_RADIUS_KM: float = 10
+    DONOR_MATCH_MAX_RADIUS_KM: float = 50
+
+    BLOOD_BANK_DEFAULT_RADIUS_KM: float = 10
+    BLOOD_BANK_MAX_RADIUS_KM: float = 100
+
     @property
     def sync_database_url(self) -> str:
         if self.DATABASE_URL:

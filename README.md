@@ -3,12 +3,13 @@
 Backend for **HemoKerala**, a location-first, privacy-first blood-donation
 coordination platform for Kerala.
 
-> Status: Phase 1 (foundation) + Phase 2 (identity) in progress. Request,
-> matching, notification, and frontend modules are not implemented yet.
+> Status: Days 1–5 complete — foundation, identity, donor profiles, blood
+> requests/responses, PostGIS donor matching, and the public blood-bank
+> directory. Notifications and the frontend are not implemented yet.
 
 ## Stack
 
-FastAPI · PostgreSQL · SQLAlchemy 2 · Alembic · Argon2 · JWT
+FastAPI · PostgreSQL + PostGIS · SQLAlchemy 2 · GeoAlchemy2 · Alembic · Argon2 · JWT
 
 ## Project layout
 
@@ -34,7 +35,7 @@ services hold business rules, repositories hold queries. Services raise
 # 1. Environment
 cp .env.example .env          # then edit credentials
 
-# 2. Database (or point .env at an existing PostgreSQL)
+# 2. Database (PostGIS image; container 5432 is exposed on host 5433)
 docker compose up -d postgres
 
 # 3. Install
@@ -57,6 +58,7 @@ uvicorn app.main:app --reload --app-dir backend
 | Format | `ruff format backend` |
 | New migration | `alembic -c backend/alembic.ini revision --autogenerate -m "message"` |
 | Apply migrations | `alembic -c backend/alembic.ini upgrade head` |
+| Check migration drift | `alembic -c backend/alembic.ini check` |
 
 ## API (v1)
 
@@ -82,9 +84,20 @@ uvicorn app.main:app --reload --app-dir backend
 | `POST` | `/api/v1/requests/{id}/responses` | Respond as a donor |
 | `GET` | `/api/v1/requests/{id}/responses` | View responses (owner: all; donor: own) |
 | `PATCH` | `/api/v1/requests/{id}/responses/{response_id}` | Update own response |
+| `GET` | `/api/v1/requests/{id}/matches?radius_km=10` | Opted-in donor candidates near a request (owner only) |
+| `GET` | `/api/v1/blood-banks` | Public directory (district/verification/location filters) |
+| `GET` | `/api/v1/blood-banks/{id}` | Public directory entry |
 
 Donor endpoints always use the authenticated user's identity; no user id is
 accepted from the client. Location reference-data seeding is documented in
-[docs/location-reference-data.md](docs/location-reference-data.md).
+[docs/location-reference-data.md](docs/location-reference-data.md). Spatial
+setup and matching rules are in
+[docs/postgis-and-matching.md](docs/postgis-and-matching.md); directory
+verification and data-loading rules are in
+[docs/blood-bank-directory.md](docs/blood-bank-directory.md).
+
+The directory is read-only over HTTP. Until an administrative role exists,
+approved records are loaded by a controlled operator process, never by public
+endpoints.
 
 Interactive docs: `http://127.0.0.1:8000/docs`.

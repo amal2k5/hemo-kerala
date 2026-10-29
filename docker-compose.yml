@@ -1,16 +1,16 @@
 services:
   postgres:
-    image: postgres:15-alpine
+    image: postgis/postgis:18-3.6
     container_name: hemokerala-postgres
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_in_production}
       POSTGRES_DB: ${POSTGRES_DB:-hemo_kerala}
     volumes:
-      - hemokerala_pgdata:/var/lib/postgresql/data
+      - hemokerala_pgdata:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-hemo_kerala}"]
       interval: 5s

@@ -8,6 +8,7 @@ from app.core.exceptions import (
     PermissionDeniedError,
     ValidationFailedError,
 )
+from app.db.spatial import point_geography
 from app.modules.locations.repository import LocationRepository
 from app.modules.requests.models import (
     ACTIVE_REQUEST_STATUSES,
@@ -32,6 +33,7 @@ class RequestService:
             raise ValidationFailedError("District not found")
 
         request = BloodRequest(requester_id=user.id, **request_in.model_dump())
+        request.location = point_geography(request_in.latitude, request_in.longitude)
         self.requests.add(request)
         self.db.commit()
         self.db.refresh(request)
