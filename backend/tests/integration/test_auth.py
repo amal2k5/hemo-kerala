@@ -128,3 +128,40 @@ def test_inactive_user_authentication_rejection(client, db_session):
         json={"email": "inactive@example.com", "password": "secret123"},
     )
     assert login.status_code == 401
+
+
+def test_oauth2_password_flow_token_endpoint(client):
+    client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": "token@example.com",
+            "password": "secret123",
+            "full_name": "Token User",
+        },
+    )
+    response = client.post(
+        "/api/v1/auth/token",
+        data={"username": "token@example.com", "password": "secret123"},
+    )
+    assert response.status_code == 200
+    assert response.json()["token_type"] == "bearer"
+
+
+def test_me_with_non_numeric_subject_returns_401(client):
+    from app.core.security import create_access_token
+
+    token = create_access_token(subject="not-an-integer")
+    response = client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == 401
+
+
+def test_registration_rejects_short_password(client):
+    response = client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": "short@example.com",
+            "password": "short",
+            "full_name": "Short Password",
+        },
+    )
+    assert response.status_code == 422
