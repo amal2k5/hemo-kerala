@@ -47,6 +47,12 @@ def _availability_status_enum() -> SAEnum:
 
 
 class DonorProfile(TimestampMixin, Base):
+    """A user's voluntary donor profile.
+
+    This stores self-reported, non-clinical information only. ``contact_verified``
+    never implies medical eligibility or clinical blood compatibility.
+    """
+
     __tablename__ = "donor_profiles"
     __table_args__ = (
         CheckConstraint(
@@ -75,6 +81,7 @@ class DonorProfile(TimestampMixin, Base):
         nullable=False,
     )
 
+    # Optional service area. Administrative geography is not a distance.
     district_id: Mapped[int | None] = mapped_column(
         ForeignKey("districts.id", ondelete="SET NULL"), index=True, nullable=True
     )
@@ -83,6 +90,7 @@ class DonorProfile(TimestampMixin, Base):
     )
     locality: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
+    # Optional approximate coordinates, never exposed outside the owner's profile.
     latitude: Mapped[float | None] = mapped_column(Numeric(9, 6), nullable=True)
     longitude: Mapped[float | None] = mapped_column(Numeric(9, 6), nullable=True)
 
@@ -93,6 +101,7 @@ class DonorProfile(TimestampMixin, Base):
         nullable=True,
     )
 
+    # Contact verification is separate from medical eligibility.
     contact_verified: Mapped[bool] = mapped_column(
         default=False, server_default=text("false"), nullable=False
     )
