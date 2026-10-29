@@ -41,6 +41,11 @@ class NotFoundError(DomainError):
     detail = "Resource not found"
 
 
+class ValidationFailedError(DomainError):
+    status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
+    detail = "Validation failed"
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(DomainError)
     async def domain_error_handler(_: Request, exc: DomainError) -> JSONResponse:

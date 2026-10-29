@@ -68,5 +68,15 @@ uvicorn app.main:app --reload --app-dir backend
 | `POST` | `/api/v1/auth/login` | JSON login → JWT |
 | `POST` | `/api/v1/auth/token` | OAuth2 password flow (Swagger) |
 | `GET` | `/api/v1/auth/me` | Current user |
+| `POST` | `/api/v1/donors/profile` | Create own donor profile |
+| `GET` | `/api/v1/donors/profile` | Read own donor profile |
+| `PATCH` | `/api/v1/donors/profile` | Partially update own donor profile |
+| `PATCH` | `/api/v1/donors/profile/availability` | Pause, resume, or withdraw availability |
+| `GET` | `/api/v1/locations/districts` | Kerala district reference data (public) |
+| `GET` | `/api/v1/locations/local-bodies` | Local bodies, filterable by district/type (public) |
+
+Donor endpoints always use the authenticated user's identity; no user id is
+accepted from the client. Location reference-data seeding is documented in
+[docs/location-reference-data.md](docs/location-reference-data.md).
 
 Interactive docs: `http://127.0.0.1:8000/docs`.
