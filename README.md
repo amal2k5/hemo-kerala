@@ -74,6 +74,14 @@ uvicorn app.main:app --reload --app-dir backend
 | `PATCH` | `/api/v1/donors/profile/availability` | Pause, resume, or withdraw availability |
 | `GET` | `/api/v1/locations/districts` | Kerala district reference data (public) |
 | `GET` | `/api/v1/locations/local-bodies` | Local bodies, filterable by district/type (public) |
+| `POST` | `/api/v1/requests` | Create a blood request |
+| `GET` | `/api/v1/requests` | List active requests (paginated) |
+| `GET` | `/api/v1/requests/{id}` | Request details |
+| `POST` | `/api/v1/requests/{id}/cancel` | Cancel own request |
+| `POST` | `/api/v1/requests/{id}/confirm-fulfilment` | Report request outcome (owner only) |
+| `POST` | `/api/v1/requests/{id}/responses` | Respond as a donor |
+| `GET` | `/api/v1/requests/{id}/responses` | View responses (owner: all; donor: own) |
+| `PATCH` | `/api/v1/requests/{id}/responses/{response_id}` | Update own response |
 
 Donor endpoints always use the authenticated user's identity; no user id is
 accepted from the client. Location reference-data seeding is documented in

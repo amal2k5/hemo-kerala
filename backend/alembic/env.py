@@ -11,6 +11,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import app.modules.donors.models  # noqa: E402, F401
 import app.modules.locations.models  # noqa: E402, F401
+import app.modules.requests.models  # noqa: E402, F401
+import app.modules.responses.models  # noqa: E402, F401
 import app.modules.users.models  # noqa: E402, F401
 from app.core.config import settings  # noqa: E402
 from app.db.base import Base  # noqa: E402
