@@ -1,23 +1,21 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: rakthalink-postgres
+    container_name: hemokerala-postgres
     restart: unless-stopped
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me_in_production}
-      POSTGRES_DB: ${POSTGRES_DB:-rakthalink}
+      POSTGRES_DB: ${POSTGRES_DB:-hemo_kerala}
     volumes:
-      - rakthalink_pgdata:/var/lib/postgresql/data
+      - hemokerala_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-rakthalink}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-hemo_kerala}"]
       interval: 5s
       timeout: 5s
       retries: 5
 
 volumes:
-  rakthalink_pgdata:
+  hemokerala_pgdata:

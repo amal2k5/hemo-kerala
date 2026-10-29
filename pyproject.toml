@@ -1,7 +1,7 @@
 [project]
 name = "hemokerala"
 version = "0.1.0"
-description = "HemoKerala - Day 1 backend"
+description = "HemoKerala - blood donation coordination backend"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.111.0",
